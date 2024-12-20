@@ -1,0 +1,28 @@
+﻿@using ClassWork.Models.Product
+@using System.Text.Json
+@model Product
+@{
+    // Получаем JSON-строку из ViewBag
+    string jsonData = ViewBag.JsonData.ToString();
+     
+    // Парсим JSON в JsonElement
+    var product = JsonSerializer.Deserialize<JsonElement>(jsonData);
+    var properties = product.EnumerateObject().OrderBy(p => p.Name);
+
+    
+}
+
+<h1>Информация о продукте</h1>
+
+<div class="drink-card">
+    @foreach (var property in properties)
+    {
+        <div class="field">
+            <span>@property.Name:</span> @property.Value
+        </div>
+    }
+</div>
+
+<a href="@Url.Action("Index", "Product")">Назад к списку</a>
+
+ 

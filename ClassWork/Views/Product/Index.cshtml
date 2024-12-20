@@ -1,0 +1,43 @@
+﻿@using ClassWork.Models.Product
+@using System.Text.Json
+@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-left">
+    <h1 class="display-4">Welcome</h1>
+    <h1>Список напитков</h1>
+
+     <!-- Кнопка для загрузки JSON -->
+    <form method="get" action="/Product/DownloadProductsJson">
+        <button type="submit">Скачать JSON продуктов</button>
+    </form>
+
+    <ul>
+        @foreach (var product in Model)
+        {
+            <li>
+                
+                    @{
+                        var jsonElement = JsonSerializer.Deserialize<JsonElement>(product.GetJsonInfo());
+                        var properties = jsonElement.EnumerateObject().OrderBy(p => p.Name);
+
+                    }
+                    @foreach (var property in properties)
+                    {
+                        if (property.Name == "Id"){
+                             <a href="@Url.Action("Details", "product", new { id = product.Id })">
+                                <span>@property.Name:</span> @property.Value
+                             </a>
+                        }else{
+                            <div class="field">
+                                <span>@property.Name:</span> @property.Value
+                            </div>
+                        }                     
+                    }
+               
+            </li>
+        }
+    </ul>
+</div>
